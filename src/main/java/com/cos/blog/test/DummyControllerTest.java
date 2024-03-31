@@ -1,14 +1,24 @@
 package com.cos.blog.test;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,15 +26,77 @@ import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.UserRepository;
 
+import lombok.Delegate;
+
 
 //리턴하는게 html파일이 아니라 data를 리턴해주는 controller = restcontroller 
 
-//27강부터 듣기
+
 @RestController
 public class DummyControllerTest {
 
 	@Autowired //의존성주임 (di) 
-	private UserRepository userrepository; //
+	private UserRepository userrepository; 
+	
+	@DeleteMapping("/dummy/user/{id}")
+	public String delete(@PathVariable int id) {		
+		try {
+			userrepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			return "삭제 실패 .해당 id는 db에 없습니다";
+		}
+		
+		userrepository.deleteById(id);
+		return "삭제 되었습니다.id:"+id;
+	}
+	
+	
+	
+	//save 함수는 id를 전달하지 않으면 insert 를 해주고
+	//save 함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
+	//save 함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 해요.
+	//email,password
+	@Transactional//메서드 종료(리턴)될때 자동 commit이 된다
+	@PutMapping("/dummy/user/{id}")
+	//@RequestBody json데이터를 받는다
+	public User updateUser(@PathVariable int id,@RequestBody User requestUser ) {
+	System.out.println("id :"+id);	
+	System.out.println("password :"+requestUser.getPassword());
+	System.out.println("email :"+requestUser.getEmail());
+	
+	User user = userrepository.findById(id).orElseThrow(()->{ //실패할수도 있기 때문에
+	return new IllegalArgumentException("수정에 실패 하셨습니다");		
+	});
+	
+	//이렇게 변경해야 save로 업데이트를 할수있다
+	user.setPassword(requestUser.getPassword());//이게없으면 영속화만 된거고 이게있으면 값을수정한거다
+	user.setEmail(requestUser.getEmail());//이게없으면 영속화만 된거고 이게있으면 값을수정한거다
+	//requestUser.setId(id);
+	//requestUser.setUsername("ssar");
+	//userrepository.save(user);//update를 할때는 save거의 안쓴다 왜냐하면 다른값들은 null로 변하기 때문에
+	
+	
+	return user;
+	}
+	
+	
+	@GetMapping("/dummy/users")
+	public List<User> list(){ //한건이 아니라 여러건으로 받으거여서 list사용
+		return userrepository.findAll(); //전체가 리턴
+	}
+	
+
+	//한 페이지당 2건에 데이터를 리턴받아 볼 예정
+	@GetMapping("/dummy/user")
+	public List<User> pagelist(@PageableDefault(size=2,sort="id",direction=Sort.Direction.DESC)Pageable pageable){ 
+		//List<User> users=userrepository.findAll(pageable).getContent(); //getContent()이걸쓰면(대신list로바꿔야한다) totalpage등보기 싫으면 이렇게 사용 보고싶은면 content지우기
+		Page<User> pagingusers=userrepository.findAll(pageable);
+		
+		List<User> users = pagingusers.getContent();
+		return users;
+		//return userrepository.findAll(pageable); 바로이렇게 보내도 됨
+	}
+	
 
 	//{id} 주소로 파라메터를 전달 받을 수 있음
 	// http://localhost:8000/blog/dummy/user/3

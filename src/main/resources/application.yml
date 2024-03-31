@@ -19,10 +19,10 @@ server:
       force: true
     
 spring: 
-#  mvc:
-#    view:
-#      prefix: /WEB-INF/views/
-#      suffix: .jsp
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
       
   datasource: #데이터베이스 설정
     driver-class-name: com.mysql.cj.jdbc.Driver
