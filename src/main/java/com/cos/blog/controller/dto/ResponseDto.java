@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ResponseDto<T> { //응답할때 사용
 	
 
-	HttpStatus status; // ok가 찍힌다
+	int status; // ok가 찍힌다
 	T data;
 	
 	

@@ -5,26 +5,25 @@
 
 <div class="container">
 
-	<form action="/action_page.php">
+	<form action="#" method="post">
 		<div class="form-group">
-			<label for="username">Username</label> <input type="text" class="form-control" placeholder="Enter username" id="username">
+			<label for="username">Username</label> <input type="text" name="usernmae" class="form-control" placeholder="Enter username" id="username">
 		</div>
 				
 		<div class="form-group">
-			<label for="passowrd">Password</label> <input type="password" class="form-control" placeholder="Enter password" id="password">
+			<label for="passowrd">Password</label> <input type="password" name="password" class="form-control" placeholder="Enter password" id="password">
 		</div>
 		
 		<div class="form-group form-check">
-			<label class="form-check-label"> <input class="form-check-input" type="checkbox"> Remember me
+			<label class="form-check-label"> <input name="remember"class="form-check-input" type="checkbox"> Remember me
 			</label>
 		</div>
-		
-		<button type="submit" class="btn btn-primary">로그인</button>
+		<button id="btn-login" class="btn btn-primary">로그인</button>
 	</form>
 
 </div>
 
-
+<!-- <script src="/js/user.js"></script>  이제 사용안할거기 때문에 from안으로 로그인 버튼을 넣어준다-->
 
 <%@ include file="../layout/footer.jsp"%>
 

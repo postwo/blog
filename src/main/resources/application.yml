@@ -12,11 +12,11 @@
 server:
   port: 8000
   servlet:
-    context-path: /blog #이거를 localhost8000/blog/나머지입력    이렇게 입력해야 접속이 가능하다
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+    context-path: /    #이거를 localhost8000/blog/나머지입력    이렇게 입력해야 접속이 가능하다
+#    encoding:
+#      charset: UTF-8
+#      enabled: true
+#      force: true
     
 spring: 
   mvc:
