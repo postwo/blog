@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +19,11 @@ public class UserApiController {
 	
 	@Autowired
 	private UserService userservice;
+	
 
 	@PostMapping("/auth/joinProc") //ajax url 경로
 	public ResponseDto<Integer> save(@RequestBody User user) { //회원가입 로직이 실행되는 부분
 		System.out.println("userapicontroller호출됨 : save 호출됨");
-		user.setRole(RoleType.USER); // 이것만 생성해서 넣어준다, 나머지는 알아서 들어가기 때문에
 		userservice.회원가입(user);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
