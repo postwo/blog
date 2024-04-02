@@ -40,7 +40,7 @@ public class Board {
 	@Lob // 대용량 데이터이때 사용함
 	private String content; // 섬머노트 라이브러리 <html>태그가 섞여서 디자인이 됨= 그래서 용량이 큼
 	
-	@ColumnDefault("0") // 초기 조회수값은 0이기 때문에 이렇게 선언
+	//@ColumnDefault("0") // 초기 조회수값은 0이기 때문에 이렇게 선언
 	private int count; //조회수
 	
 	
